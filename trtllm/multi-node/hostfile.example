@@ -1,0 +1,10 @@
+# OpenMPI hostfile — copy to ~/openmpi-hostfile on BOTH nodes.
+#
+# Use the link-local IPs assigned to the QSFP interface, not the hostnames:
+# hostname resolution goes through the management network and MPI will then
+# route traffic over the wrong interface.
+#
+# slots=1 because each DGX Spark exposes a single GPU; one rank per node.
+
+169.254.0.11 slots=1
+169.254.0.12 slots=1

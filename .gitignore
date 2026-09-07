@@ -1,0 +1,21 @@
+# 憑證：絕對不要提交。改用 export HF_TOKEN=... 或 .env（見 vllm/.env.example）
+.env
+*.token
+token.txt
+
+# 主機清單含實際 IP，不提交
+hostfile
+
+# 模型權重與快取
+*.safetensors
+*.gguf
+*.whl
+wheels/
+.cache/
+
+# 執行期產物
+*.log
+nohup.out
+benchmarks/results/
+__pycache__/
+*.pyc

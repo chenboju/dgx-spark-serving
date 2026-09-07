@@ -1,0 +1,115 @@
+diff --git a/Dockerfile.mxfp4 b/Dockerfile.mxfp4
+index 4b4a895..88194cb 100644
+--- a/Dockerfile.mxfp4
++++ b/Dockerfile.mxfp4
+@@ -6,7 +6,7 @@ ARG BUILD_JOBS=16
+ # =========================================================
+ # STAGE 1: Base Image (Installs Dependencies)
+ # =========================================================
+-FROM nvcr.io/nvidia/pytorch:26.01-py3 AS base
++FROM nvcr.io/nvidia/pytorch:26.03-py3 AS base
+ 
+ # Build parallemism
+ ARG BUILD_JOBS
+@@ -101,7 +101,7 @@ ARG FLASHINFER_SHA=f349e52496a72a00d8c4ac02c7a1e38523ff7194
+ ARG CUTLASS_SHA=c7516ad20f3d022fdbc93e9468643bf3b577e02c
+ 
+ RUN --mount=type=cache,id=uv-cache,target=/root/.cache/uv \
+-     uv pip install nvidia-nvshmem-cu13 "apache-tvm-ffi<0.2"
++     uv pip install nvidia-nvshmem-cu12 "apache-tvm-ffi<0.2"
+ 
+ # Clone FlashInfer (cached for faster rebuilds)
+ RUN --mount=type=cache,id=git-flashinfer,target=/git-cache/flashinfer \
+@@ -226,7 +226,7 @@ RUN --mount=type=cache,id=ccache,target=/root/.ccache \
+ # =========================================================
+ # STAGE 4: Runner (Transfers only necessary artifacts)
+ # =========================================================
+-FROM nvcr.io/nvidia/pytorch:26.01-py3 AS runner
++FROM nvcr.io/nvidia/pytorch:26.03-py3 AS runner
+ 
+ ENV DEBIAN_FRONTEND=noninteractive
+ ENV PIP_BREAK_SYSTEM_PACKAGES=1
+@@ -272,7 +272,7 @@ ENV PATH=$VLLM_BASE_DIR:$PATH
+ 
+ # Final extra deps
+ RUN --mount=type=cache,id=uv-cache,target=/root/.cache/uv \
+-    uv pip install ray[default] fastsafetensors nvidia-nvshmem-cu13
++    uv pip install ray[default] fastsafetensors nvidia-nvshmem-cu12
+ 
+ # If not compiling Triton
+ # remove triton-kernels as they are not compatible with this vLLM version yet
+diff --git a/recipes/nemotron-3-super-nvfp4.yaml b/recipes/nemotron-3-super-nvfp4.yaml
+index a4de32d..2721b08 100644
+--- a/recipes/nemotron-3-super-nvfp4.yaml
++++ b/recipes/nemotron-3-super-nvfp4.yaml
+@@ -42,4 +42,5 @@ command: |
+   --reasoning-parser-plugin super_v3_reasoning_parser.py \
+   --reasoning-parser super_v3 \
+   --tensor-parallel-size {tensor_parallel} \
+-  --distributed-executor-backend ray
+\ No newline at end of file
++  --distributed-executor-backend ray \
++  --enforce-eager
+\ No newline at end of file
+diff --git a/recipes/openai-gpt-oss-120b.yaml b/recipes/openai-gpt-oss-120b.yaml
+index 09cfa52..eba1d5c 100644
+--- a/recipes/openai-gpt-oss-120b.yaml
++++ b/recipes/openai-gpt-oss-120b.yaml
+@@ -1,9 +1,10 @@
++
+ # Recipe: OpenAI GPT-OSS 120B
+ # OpenAI's open source 120B MoE model with MXFP4 quantization support
+ 
+ recipe_version: "1"
+ name: OpenAI GPT-OSS 120B
+-description: vLLM serving openai/gpt-oss-120b with MXFP4 quantization and FlashInfer
++description: vLLM serving openai/gpt-oss-120b with MXFP4 quantization and FlashInfer (Community Patch)
+ 
+ # HuggingFace model to download (optional, for --download-model)
+ model: openai/gpt-oss-120b
+@@ -13,22 +14,22 @@ container: vllm-node-mxfp4
+ 
+ # Build arguments for build-and-copy.sh
+ build_args:
+-  - --exp-mxfp4
++  - '--exp-mxfp4'
+ 
+ # No mods required for this model
+ mods: []
+ 
+ # Default settings (can be overridden via CLI)
+ defaults:
+-  port: 8000
++  port: 3000
+   host: 0.0.0.0
+   tensor_parallel: 2
+   gpu_memory_utilization: 0.70
+-  max_num_batched_tokens: 8192
++  max_num_batched_tokens: 32000
+ 
+ # Environment variables to set in the container
+ env:
+-  VLLM_USE_FLASHINFER_MOE_MXFP4_MXFP8: "1"
++  VLLM_MXFP4_BACKEND: TRTLLM_MXFP
+ 
+ # The vLLM serve command template
+ # Uses MXFP4 quantization for memory efficiency
+@@ -38,15 +39,13 @@ command: |
+       --reasoning-parser openai_gptoss \
+       --enable-auto-tool-choice \
+       --tensor-parallel-size {tensor_parallel} \
+-      --distributed-executor-backend ray \
+       --gpu-memory-utilization {gpu_memory_utilization} \
+       --enable-prefix-caching \
+       --load-format fastsafetensors \
+       --quantization mxfp4 \
+-      --mxfp4-backend CUTLASS \
+-      --mxfp4-layers moe,qkv,o,lm_head \
++      --mxfp4-backend cutlass \
+       --attention-backend FLASHINFER \
+       --kv-cache-dtype fp8 \
+       --max-num-batched-tokens {max_num_batched_tokens} \
+       --host {host} \
+-      --port {port}
++      --port {port}
+\ No newline at end of file

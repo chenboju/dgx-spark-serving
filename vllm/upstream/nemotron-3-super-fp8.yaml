@@ -1,0 +1,39 @@
+recipe_version: "1"
+name: Nemotron-3-Super-FP8
+description: vLLM serving Nemotron-3-Super-120B in FP8
+
+model: nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8
+container: vllm-node
+cluster_only: false
+solo_only: false
+
+env:
+  VLLM_ALLOW_LONG_MAX_MODEL_LEN: 1
+  VLLM_USE_V1: "0"  # 強制使用穩定的 V0 引擎，避開 V1 編譯 Bug
+
+defaults:
+  port: 8000
+  host: 0.0.0.0
+  tensor_parallel: 2
+  gpu_memory_utilization: 0.6
+  max_model_len: 262144
+  max_num_seqs: 1
+
+command: |
+  vllm serve nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8 \
+  --kv-cache-dtype fp8 \
+  --trust-remote-code \
+  --gpu-memory-utilization {gpu_memory_utilization} \
+  --max-model-len {max_model_len} \
+  --max-num-seqs {max_num_seqs} \
+  --enable-prefix-caching \
+  --host {host} \
+  --port {port} \
+  --enable-auto-tool-choice \
+  --load-format fastsafetensors \
+  --tool-call-parser qwen3_coder \
+  --reasoning-parser nemotron_v3 \
+  --mamba_ssm_cache_dtype float32 \
+  --tensor-parallel-size {tensor_parallel} \
+  --attention-backend TRITON_ATTN \
+  --distributed-executor-backend ray

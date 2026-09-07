@@ -1,0 +1,11 @@
+# Shell scripts must keep LF endings: they run inside Linux containers on the
+# DGX Spark. A CRLF checkout breaks them with "bad interpreter: /bin/bash^M".
+* text=auto
+*.sh  text eol=lf
+*.py  text eol=lf
+*.md  text eol=lf
+*.yaml text eol=lf
+
+# Patch files must survive byte for byte: line endings inside a diff are
+# significant, so exclude them from normalisation entirely.
+*.patch -text

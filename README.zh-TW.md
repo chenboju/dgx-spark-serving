@@ -70,7 +70,7 @@ bash vllm/single-node/gpt-oss/gpt-oss-120b-mxfp4.sh
 
 ## 效能資料與限制
 
-姊妹專案 **llm-serving-benchmark** 保存 GPT-OSS-20B／120B 的單節點 vLLM 量測，以及 RTX 4090 與 DGX Spark 的比較。那些結果不代表本專案雙節點或 TensorRT-LLM 的效能。
+專案 **llm-serving-benchmark** 保存 GPT-OSS-20B／120B 的單節點 vLLM 量測，以及 RTX 4090 與 DGX Spark 的比較。那些結果不代表本專案雙節點或 TensorRT-LLM 的效能。
 
 本專案未量測單機與雙節點 scaling、vLLM 與 TensorRT-LLM 效能差異、推測解碼加速比或量化品質差異。已成功啟動的組態也不等於通用部署預設；部分 TRT-LLM 雙節點設定使用 TCP fallback 與隔離直連網段的 SSH 組態，細節見框架文件。
 

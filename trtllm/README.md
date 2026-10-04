@@ -103,8 +103,8 @@ Honest accounting of what this is not:
   load and stay up. There are no tokens/s, TTFT, or single-vs-two-node scaling
   numbers for this backend, so the cost of the workarounds below is unquantified.
   GPT-OSS-20B and 120B on this same hardware *were* measured, but **under vLLM,
-  not TensorRT-LLM** — see the companion project **llm-serving-benchmark**
-  (`dgx-spark-cuda/`). Those numbers say nothing about the configurations here;
+  not TensorRT-LLM** — see the companion project [**llm-serving-benchmark**](https://github.com/chenboju/llm-serving-benchmark)
+  ([`dgx-spark-cuda/`](https://github.com/chenboju/llm-serving-benchmark/tree/main/dgx-spark-cuda)). Those numbers say nothing about the configurations here;
   the two backends were never compared.
 - **`--max_batch_size 1` on multi-node** is a memory ceiling, not a choice.
   Multi-node throughput is bad until this moves.

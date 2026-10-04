@@ -111,7 +111,7 @@ source .env
 本專案已結束，以下是範圍界定，不是待辦清單。
 
 **已在別處量測。** GPT-OSS-20B 與 120B 在這套硬體上的 throughput、TTFT 與 SLO
-達成率，已在姊妹專案 **llm-serving-benchmark**（`dgx-spark-cuda/`）以 vLLM 完成量測。
+達成率，已在姊妹專案 [**llm-serving-benchmark**](https://github.com/chenboju/llm-serving-benchmark)（[`dgx-spark-cuda/`](https://github.com/chenboju/llm-serving-benchmark/tree/main/dgx-spark-cuda)）以 vLLM 完成量測。
 主要結果：同一組 37 個 cell 下，DGX Spark 的 closed-loop 吞吐約為 RTX 4090 的
 0.28 倍；在 TTFT 1000 ms / ITL 50 ms 的 SLO 下，單台 Spark 跑 120B 的併發上限是
 2、跑 20B 是 8。

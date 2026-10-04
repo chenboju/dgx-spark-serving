@@ -70,7 +70,7 @@ bash vllm/single-node/gpt-oss/gpt-oss-120b-mxfp4.sh
 
 ## Performance data and limitations
 
-The companion project **llm-serving-benchmark** contains single-node vLLM measurements for GPT-OSS-20B / 120B and comparisons between RTX 4090 and DGX Spark. Those results do not establish performance for this project's two-node or TensorRT-LLM configurations.
+The companion project [**llm-serving-benchmark**](https://github.com/chenboju/llm-serving-benchmark) contains single-node vLLM measurements for GPT-OSS-20B / 120B and comparisons between RTX 4090 and DGX Spark. Those results do not establish performance for this project's two-node or TensorRT-LLM configurations.
 
 Single-node versus two-node scaling, vLLM versus TensorRT-LLM performance, speculative decoding speedup, and quantisation quality differences were not measured here. Successful bring-up does not establish general-purpose deployment defaults. Some two-node TRT-LLM configurations use TCP fallback and SSH settings for an isolated direct link; see the framework documentation.
 

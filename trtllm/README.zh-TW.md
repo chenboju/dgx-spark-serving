@@ -97,7 +97,7 @@ host 的 sshd 已經佔用 22。見 [`02-setup-mpi-ssh.sh`](multi-node/02-setup-
   這個 backend 沒有 tokens/s、TTFT，也沒有單機對雙節點的 scaling 數字，
   所以下面那些繞道做法的代價是未量化的。
   GPT-OSS-20B 與 120B 在**同一套硬體**上確實有實測，但那是**用 vLLM 跑的，
-  不是 TensorRT-LLM**——見姊妹專案 **llm-serving-benchmark**（`dgx-spark-cuda/`）。
+  不是 TensorRT-LLM**——見姊妹專案 [**llm-serving-benchmark**](https://github.com/chenboju/llm-serving-benchmark)（[`dgx-spark-cuda/`](https://github.com/chenboju/llm-serving-benchmark/tree/main/dgx-spark-cuda)）。
   那些數字不能用來說明這裡的組態；兩個 backend 從未互相比較過。
 - **多節點的 `--max_batch_size 1`** 是記憶體天花板，不是選擇。
   在這一項改善之前，多節點的吞吐都很差。

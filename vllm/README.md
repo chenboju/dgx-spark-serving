@@ -131,7 +131,7 @@ This work is finished; the list below is scope, not a plan.
 
 **Measured elsewhere.** Throughput, TTFT and SLO attainment for GPT-OSS-20B and
 120B on this hardware were measured under vLLM and are published in the
-companion project, **llm-serving-benchmark** (`dgx-spark-cuda/`). Headline results: DGX
+companion project, [**llm-serving-benchmark**](https://github.com/chenboju/llm-serving-benchmark) ([`dgx-spark-cuda/`](https://github.com/chenboju/llm-serving-benchmark/tree/main/dgx-spark-cuda)). Headline results: DGX
 Spark reaches about 0.28x an RTX 4090's closed-loop throughput on the same 37
 cells, and under a 1000 ms TTFT / 50 ms ITL SLO a single Spark serves 120B at
 concurrency 2 and 20B at concurrency 8.
